@@ -50,9 +50,16 @@ class PurchasesConfiguration {
   /// check: https://rev.cat/storekit-message and https://rev.cat/googleplayinappmessaging
   bool shouldShowInAppMessagesAutomatically = true;
 
-  /// Required to configure the plugin to be used in the Amazon Appstore.
-  /// Values different to [Store.amazon] don't have any effect.
+  /// Android only, ignored on other platforms.
+  /// Set to [Store.amazon] for the Amazon Appstore or [Store.galaxy] for the
+  /// Samsung Galaxy Store. Other values use Google Play.
+  /// [Store.galaxy] also needs the `purchases_flutter_store_galaxy` package.
   Store? store;
+
+  /// Android only, ignored on other platforms.
+  /// The Galaxy Store billing mode. Ignored unless [store] is [Store.galaxy].
+  /// Null uses [GalaxyBillingMode.production].
+  GalaxyBillingMode? galaxyBillingMode;
 
   /// Verification strictness levels for [EntitlementInfo].
   /// See https://rev.cat/trusted-entitlements for more info.
@@ -87,5 +94,18 @@ class PurchasesConfiguration {
 class AmazonConfiguration extends PurchasesConfiguration {
   AmazonConfiguration(String apiKey) : super(apiKey) {
     store = Store.amazon;
+  }
+}
+
+/// A [PurchasesConfiguration] convenience object that
+/// sets [PurchasesConfiguration.store] to [Store.galaxy] and
+/// [PurchasesConfiguration.galaxyBillingMode] to the given mode.
+/// Android only, ignored on other platforms.
+/// On Android, the app also needs the `purchases_flutter_store_galaxy` package.
+class GalaxyConfiguration extends PurchasesConfiguration {
+  GalaxyConfiguration(String apiKey, {GalaxyBillingMode? galaxyBillingMode})
+      : super(apiKey) {
+    store = Store.galaxy;
+    this.galaxyBillingMode = galaxyBillingMode;
   }
 }

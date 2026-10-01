@@ -12,6 +12,7 @@ class _PurchaseConfigurationApiTest {
     String? appUserId = configuration.appUserID;
     String? userDefaultsSuiteName = configuration.userDefaultsSuiteName;
     Store? store = configuration.store;
+    GalaxyBillingMode? galaxyBillingMode = configuration.galaxyBillingMode;
     PurchasesAreCompletedBy? purchasesAreCompletedBy =
         configuration.purchasesAreCompletedBy;
     StoreKitVersion? storeKitVersion = configuration.storeKitVersion;
@@ -22,6 +23,8 @@ class _PurchaseConfigurationApiTest {
     configuration.userDefaultsSuiteName = "fakeSuiteName";
     configuration.store = null;
     configuration.store = Store.playStore;
+    configuration.galaxyBillingMode = null;
+    configuration.galaxyBillingMode = GalaxyBillingMode.test;
     configuration.storeKitVersion = storeKitVersion;
     configuration.automaticDeviceIdentifierCollectionEnabled = true;
     configuration.diagnosticsEnabled = true;
@@ -51,5 +54,28 @@ class _PurchaseConfigurationApiTest {
     configuration.storeKitVersion = storeKitVersion;
     configuration.automaticDeviceIdentifierCollectionEnabled = true;
     configuration.diagnosticsEnabled = true;
+  }
+
+  void _checkGalaxyConfigurationConstructor() {
+    GalaxyConfiguration configuration = GalaxyConfiguration("fakeApiKey");
+    GalaxyConfiguration configurationWithMode = GalaxyConfiguration(
+      "fakeApiKey",
+      galaxyBillingMode: GalaxyBillingMode.test,
+    );
+  }
+
+  void _checkGalaxyConfigurationProperties(GalaxyConfiguration configuration) {
+    GalaxyBillingMode? galaxyBillingMode = configuration.galaxyBillingMode;
+    Store? store = configuration.store;
+    configuration.appUserID = "fakeUserId";
+  }
+
+  void _checkGalaxyBillingMode(GalaxyBillingMode mode) {
+    switch (mode) {
+      case GalaxyBillingMode.production:
+      case GalaxyBillingMode.test:
+      case GalaxyBillingMode.alwaysFail:
+        break;
+    }
   }
 }

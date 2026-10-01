@@ -179,6 +179,8 @@ class Purchases {
         'userDefaultsSuiteName': purchasesConfiguration.userDefaultsSuiteName,
         'storeKitVersion': storeKitVersionToUse.name,
         'useAmazon': purchasesConfiguration.store == Store.amazon,
+        'useGalaxy': purchasesConfiguration.store == Store.galaxy,
+        'galaxyBillingMode': purchasesConfiguration.galaxyBillingMode?.name,
         'shouldShowInAppMessagesAutomatically':
             purchasesConfiguration.shouldShowInAppMessagesAutomatically,
         'entitlementVerificationMode':

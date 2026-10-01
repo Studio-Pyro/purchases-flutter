@@ -96,6 +96,8 @@ void main() {
             'purchasesAreCompletedBy': 'REVENUECAT',
             'userDefaultsSuiteName': null,
             'useAmazon': false,
+            'useGalaxy': false,
+            'galaxyBillingMode': null,
             'storeKitVersion': 'DEFAULT',
             'shouldShowInAppMessagesAutomatically': true,
             'entitlementVerificationMode': 'DISABLED',
@@ -128,6 +130,8 @@ void main() {
             'purchasesAreCompletedBy': 'MY_APP',
             'userDefaultsSuiteName': null,
             'useAmazon': false,
+            'useGalaxy': false,
+            'galaxyBillingMode': null,
             'storeKitVersion': 'STOREKIT_2',
             'shouldShowInAppMessagesAutomatically': true,
             'entitlementVerificationMode': 'DISABLED',
@@ -158,6 +162,8 @@ void main() {
             'purchasesAreCompletedBy': 'REVENUECAT',
             'userDefaultsSuiteName': null,
             'useAmazon': false,
+            'useGalaxy': false,
+            'galaxyBillingMode': null,
             'storeKitVersion': 'STOREKIT_1',
             'shouldShowInAppMessagesAutomatically': true,
             'entitlementVerificationMode': 'DISABLED',
@@ -191,6 +197,8 @@ void main() {
             'purchasesAreCompletedBy': 'MY_APP',
             'userDefaultsSuiteName': null,
             'useAmazon': false,
+            'useGalaxy': false,
+            'galaxyBillingMode': null,
             'storeKitVersion': 'STOREKIT_2',
             'shouldShowInAppMessagesAutomatically': true,
             'entitlementVerificationMode': 'DISABLED',
@@ -1727,6 +1735,8 @@ void main() {
             'userDefaultsSuiteName': null,
             'storeKitVersion': 'STOREKIT_2',
             'useAmazon': true,
+            'useGalaxy': false,
+            'galaxyBillingMode': null,
             'shouldShowInAppMessagesAutomatically': true,
             'entitlementVerificationMode': 'DISABLED',
             'pendingTransactionsForPrepaidPlansEnabled': false,
@@ -1757,6 +1767,8 @@ void main() {
             'purchasesAreCompletedBy': 'REVENUECAT',
             'userDefaultsSuiteName': null,
             'useAmazon': true,
+            'useGalaxy': false,
+            'galaxyBillingMode': null,
             'storeKitVersion': 'DEFAULT',
             'shouldShowInAppMessagesAutomatically': true,
             'entitlementVerificationMode': 'DISABLED',
@@ -1790,6 +1802,8 @@ void main() {
             'userDefaultsSuiteName': null,
             'storeKitVersion': 'DEFAULT',
             'useAmazon': false,
+            'useGalaxy': false,
+            'galaxyBillingMode': null,
             'shouldShowInAppMessagesAutomatically': true,
             'entitlementVerificationMode': 'DISABLED',
             'pendingTransactionsForPrepaidPlansEnabled': false,
@@ -1823,6 +1837,8 @@ void main() {
             'userDefaultsSuiteName': null,
             'storeKitVersion': 'DEFAULT',
             'useAmazon': true,
+            'useGalaxy': false,
+            'galaxyBillingMode': null,
             'shouldShowInAppMessagesAutomatically': true,
             'entitlementVerificationMode': 'DISABLED',
             'pendingTransactionsForPrepaidPlansEnabled': false,
@@ -1832,6 +1848,74 @@ void main() {
           },
         ),
       ],
+    );
+  });
+
+  test('configure with galaxy', () async {
+    await Purchases.configure(
+      GalaxyConfiguration('api_key')..appUserID = 'cesar',
+    );
+    expect(
+      log,
+      <Matcher>[
+        isMethodCall(
+          'setupPurchases',
+          arguments: <String, dynamic>{
+            'apiKey': 'api_key',
+            'appUserId': 'cesar',
+            'purchasesAreCompletedBy': 'REVENUECAT',
+            'userDefaultsSuiteName': null,
+            'storeKitVersion': 'DEFAULT',
+            'useAmazon': false,
+            'useGalaxy': true,
+            'galaxyBillingMode': null,
+            'shouldShowInAppMessagesAutomatically': true,
+            'entitlementVerificationMode': 'DISABLED',
+            'pendingTransactionsForPrepaidPlansEnabled': false,
+            'automaticDeviceIdentifierCollectionEnabled': true,
+            'diagnosticsEnabled': false,
+            'preferredUILocaleOverride': null,
+          },
+        ),
+      ],
+    );
+  });
+
+  test('configure with galaxy sends each billing mode', () async {
+    const expectedNames = {
+      GalaxyBillingMode.production: 'PRODUCTION',
+      GalaxyBillingMode.test: 'TEST',
+      GalaxyBillingMode.alwaysFail: 'ALWAYS_FAIL',
+    };
+    for (final mode in GalaxyBillingMode.values) {
+      log.clear();
+      await Purchases.configure(
+        GalaxyConfiguration('api_key', galaxyBillingMode: mode),
+      );
+      expect(
+        log.single.arguments,
+        allOf(
+          containsPair('useGalaxy', true),
+          containsPair('useAmazon', false),
+          containsPair('galaxyBillingMode', expectedNames[mode]),
+        ),
+      );
+    }
+  });
+
+  test('configure with base configuration and using galaxy', () async {
+    await Purchases.configure(
+      PurchasesConfiguration('api_key')
+        ..store = Store.galaxy
+        ..galaxyBillingMode = GalaxyBillingMode.test,
+    );
+    expect(
+      log.single.arguments,
+      allOf(
+        containsPair('useGalaxy', true),
+        containsPair('useAmazon', false),
+        containsPair('galaxyBillingMode', 'TEST'),
+      ),
     );
   });
 
@@ -1853,6 +1937,8 @@ void main() {
             'userDefaultsSuiteName': null,
             'storeKitVersion': 'DEFAULT',
             'useAmazon': false,
+            'useGalaxy': false,
+            'galaxyBillingMode': null,
             'shouldShowInAppMessagesAutomatically': true,
             'entitlementVerificationMode': 'DISABLED',
             'pendingTransactionsForPrepaidPlansEnabled': false,
@@ -1883,6 +1969,8 @@ void main() {
             'userDefaultsSuiteName': null,
             'storeKitVersion': 'DEFAULT',
             'useAmazon': false,
+            'useGalaxy': false,
+            'galaxyBillingMode': null,
             'shouldShowInAppMessagesAutomatically': true,
             'entitlementVerificationMode': 'DISABLED',
             'pendingTransactionsForPrepaidPlansEnabled': false,
@@ -1913,6 +2001,8 @@ void main() {
             'userDefaultsSuiteName': null,
             'storeKitVersion': 'DEFAULT',
             'useAmazon': false,
+            'useGalaxy': false,
+            'galaxyBillingMode': null,
             'shouldShowInAppMessagesAutomatically': true,
             'entitlementVerificationMode': 'DISABLED',
             'pendingTransactionsForPrepaidPlansEnabled': false,

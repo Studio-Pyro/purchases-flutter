@@ -25,9 +25,7 @@ apply plugin: 'com.android.library'
 android {
     compileSdk 34
 
-    if (project.android.hasProperty("namespace")) {
-        namespace 'com.revenuecat.purchases_flutter_store_galaxy'
-    }
+    namespace 'com.revenuecat.purchases_flutter_store_galaxy'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

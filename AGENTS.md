@@ -43,6 +43,7 @@ purchases-flutter/
 ├── ios/                      # iOS native implementation (Swift/ObjC)
 ├── macos/                    # macOS native implementation
 ├── purchases_ui_flutter/     # Separate package for UI components (Paywalls, Customer Center)
+├── purchases_flutter_store_galaxy/  # Android-only add-on with the Galaxy Store module (no Dart code)
 ├── api_tester/               # API stability tests (detects breaking changes)
 ├── revenuecat_examples/      # Sample apps
 │   ├── MagicWeather/         # Basic subscription demo

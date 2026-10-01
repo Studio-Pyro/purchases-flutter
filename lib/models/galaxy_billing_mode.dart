@@ -8,7 +8,7 @@ enum GalaxyBillingMode {
   /// registered in the Samsung Seller Portal.
   test,
 
-  /// Every purchase fails. Use this to test error handling.
+  /// Every Samsung IAP request fails. Use this to test error handling.
   alwaysFail,
 }
 

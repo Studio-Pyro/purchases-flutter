@@ -118,6 +118,17 @@ lane :release_purchases_ui_flutter do |options|
   end
 end
 
+desc "Create purchases_flutter_store_galaxy release"
+lane :release_purchases_flutter_store_galaxy do |options|
+  Dir.chdir('../purchases_flutter_store_galaxy') do
+    sh('flutter', 'pub', 'publish', '--dry-run')
+  end
+  setup_credentials_file
+  Dir.chdir('../purchases_flutter_store_galaxy') do
+    sh('flutter', 'pub', 'publish', '--force')
+  end
+end
+
 desc "Make github release with current version number"
 lane :github_release_current_version do |options|
   github_release(version: current_version_number)

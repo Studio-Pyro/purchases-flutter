@@ -113,6 +113,8 @@ public class PurchasesFlutterPlugin implements FlutterPlugin, MethodCallHandler,
                 String appUserId = call.argument("appUserId");
                 String purchasesAreCompletedBy = call.argument("purchasesAreCompletedBy");
                 Boolean useAmazon = call.argument("useAmazon");
+                Boolean useGalaxy = call.argument("useGalaxy");
+                String galaxyBillingMode = call.argument("galaxyBillingMode");
                 // noinspection unused
                 String userDefaultsSuiteName = call.argument("userDefaultsSuiteName"); // iOS-only, unused.
                 // noinspection unused
@@ -126,6 +128,7 @@ public class PurchasesFlutterPlugin implements FlutterPlugin, MethodCallHandler,
                 Boolean diagnosticsEnabled = call.argument("diagnosticsEnabled");
                 String preferredUILocaleOverride = call.argument("preferredUILocaleOverride");
                 setupPurchases(apiKey, appUserId, purchasesAreCompletedBy, useAmazon,
+                        useGalaxy, galaxyBillingMode,
                         shouldShowInAppMessagesAutomatically, verificationMode,
                         pendingTransactionsForPrepaidPlansEnabled,
                         automaticDeviceIdentifierCollectionEnabled, diagnosticsEnabled,
@@ -428,6 +431,7 @@ public class PurchasesFlutterPlugin implements FlutterPlugin, MethodCallHandler,
 
     private void setupPurchases(String apiKey, String appUserID,
             @Nullable String purchasesAreCompletedBy, @Nullable Boolean useAmazon,
+            @Nullable Boolean useGalaxy, @Nullable String galaxyBillingMode,
             @Nullable Boolean shouldShowInAppMessagesAutomatically, @Nullable String verificationMode,
             @Nullable Boolean pendingTransactionsForPrepaidPlansEnabled,
             @Nullable Boolean automaticDeviceIdentifierCollectionEnabled,
@@ -437,23 +441,38 @@ public class PurchasesFlutterPlugin implements FlutterPlugin, MethodCallHandler,
         if (this.applicationContext != null) {
             PlatformInfo platformInfo = new PlatformInfo(PLATFORM_NAME, PLUGIN_VERSION);
             Store store = Store.PLAY_STORE;
-            if (useAmazon != null && useAmazon) {
+            if (useGalaxy != null && useGalaxy) {
+                store = Store.GALAXY;
+            } else if (useAmazon != null && useAmazon) {
                 store = Store.AMAZON;
             }
 
-            CommonKt.configure(this.applicationContext,
-                    apiKey,
-                    appUserID,
-                    purchasesAreCompletedBy,
-                    platformInfo,
-                    store,
-                    new DangerousSettings(),
-                    shouldShowInAppMessagesAutomatically,
-                    verificationMode,
-                    pendingTransactionsForPrepaidPlansEnabled,
-                    diagnosticsEnabled,
-                    automaticDeviceIdentifierCollectionEnabled,
-                    preferredUILocaleOverride);
+            try {
+                CommonKt.configure(this.applicationContext,
+                        apiKey,
+                        appUserID,
+                        purchasesAreCompletedBy,
+                        platformInfo,
+                        store,
+                        new DangerousSettings(),
+                        shouldShowInAppMessagesAutomatically,
+                        verificationMode,
+                        pendingTransactionsForPrepaidPlansEnabled,
+                        diagnosticsEnabled,
+                        automaticDeviceIdentifierCollectionEnabled,
+                        preferredUILocaleOverride,
+                        galaxyBillingMode);
+            } catch (NoClassDefFoundError e) {
+                if (store != Store.GALAXY) {
+                    throw e;
+                }
+                result.error(
+                        String.valueOf(PurchasesErrorCode.ConfigurationError.getCode()),
+                        "Galaxy Store support needs the purchases_flutter_store_galaxy package. " +
+                                "Add it to your app's pubspec.yaml.",
+                        null);
+                return;
+            }
 
             setUpdatedCustomerInfoListener();
             result.success(null);

@@ -37,7 +37,7 @@ Galaxy Store support comes in two packages:
 ```dart
 await Purchases.configure(
   GalaxyConfiguration('galx_your_api_key',
-      galaxyBillingMode: GalaxyBillingMode.test), // null uses production
+      galaxyBillingMode: GalaxyBillingMode.test), // omit for production
 );
 ```
 

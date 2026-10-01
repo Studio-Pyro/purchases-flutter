@@ -26,6 +26,43 @@ To use this plugin, add `purchases_flutter` as a [dependency in your pubspec.yam
 ### Requirements
 *purchases_flutter* requires Xcode 14.0+ and minimum targets iOS 13.0+/Android SDK 21+ (Android 5.0+).
 
+### Samsung Galaxy Store (Studio-Pyro fork)
+This fork adds Galaxy Store support on Android. It is not part of the upstream RevenueCat release.
+
+Galaxy Store support comes in two packages:
+
+- `purchases_flutter` holds the Dart API (`GalaxyConfiguration`, `GalaxyBillingMode`). It keeps Android `minSdk` 21 and does not include the Samsung IAP SDK.
+- `purchases_flutter_store_galaxy` adds the RevenueCat Galaxy Store module and the Samsung IAP SDK. It needs Android `minSdk` 23 or higher and adds the `com.samsung.android.iap.permission.BILLING` permission. Add it only to apps that sell through the Galaxy Store.
+
+```dart
+await Purchases.configure(
+  GalaxyConfiguration('galx_your_api_key',
+      galaxyBillingMode: GalaxyBillingMode.test), // null uses production
+);
+```
+
+You can also set `store = Store.galaxy` and `galaxyBillingMode` on a `PurchasesConfiguration`. The billing mode is ignored unless the store is `Store.galaxy`. iOS, macOS and web ignore both settings.
+
+If the app configures the Galaxy Store without `purchases_flutter_store_galaxy`, `Purchases.configure` throws a `PlatformException` with code `23` (`PurchasesErrorCode.configurationError`).
+
+Take both packages from this fork. Put `purchases_flutter` in `dependency_overrides`, because `purchases_ui_flutter` and `purchases_flutter_store_galaxy` depend on `purchases_flutter` from pub.dev.
+
+```yaml
+dependencies:
+  purchases_flutter: ^10.13.2
+  purchases_flutter_store_galaxy:
+    git:
+      url: https://github.com/Studio-Pyro/purchases-flutter.git
+      ref: galaxy-store
+      path: purchases_flutter_store_galaxy
+
+dependency_overrides:
+  purchases_flutter:
+    git:
+      url: https://github.com/Studio-Pyro/purchases-flutter.git
+      ref: galaxy-store
+```
+
 ## SDK Reference
  Our full SDK reference [can be found here](https://pub.dev/documentation/purchases_flutter/latest/).
 

@@ -29,6 +29,8 @@ files_with_version_number = {
     './purchases_ui_flutter/ios/purchases_ui_flutter.podspec' => ['s.version          = \'{x}\''],
     './purchases_ui_flutter/macos/purchases_ui_flutter.podspec' => ['s.version          = \'{x}\''],
     './purchases_ui_flutter/android/build.gradle' => ['version \'{x}\''],
+    './purchases_flutter_store_galaxy/pubspec.yaml' => ['version: {x}', 'purchases_flutter: ^{x}'],
+    './purchases_flutter_store_galaxy/android/build.gradle' => ['version \'{x}\''],
     './lib/web/purchases_flutter_web.dart' => ['_pluginVersion = \'{x}\''],
 }
 
@@ -91,10 +93,11 @@ end
 
 desc "Create release"
 lane :release do |options|
-  # Remove purchases_ui_flutter so it's not included in the release of the main SDK
+  # Remove purchases_ui_flutter and purchases_flutter_store_galaxy so they are not included in the release of the main SDK
   # Can't use .pubignore because it causes files to not be found when trying to
   # deploy purchases_ui_flutter
   sh('rm', '-rf', 'purchases_ui_flutter')
+  sh('rm', '-rf', 'purchases_flutter_store_galaxy')
   Dir.chdir('..') do
     sh('flutter', 'pub', 'publish', '--dry-run')
   end
@@ -179,6 +182,7 @@ lane :update_hybrid_common do |options|
       'purchases_ui_flutter/ios/purchases_ui_flutter/Package.swift' => ['.package(url: "https://github.com/RevenueCat/purchases-hybrid-common.git", exact: "{x}")'],
       'purchases_ui_flutter/macos/purchases_ui_flutter/Package.swift' => ['.package(url: "https://github.com/RevenueCat/purchases-hybrid-common.git", exact: "{x}")'],
       'purchases_ui_flutter/android/build.gradle' => ['ext.common_version = \'{x}\''],
+      'purchases_flutter_store_galaxy/android/build.gradle' => ['ext.common_version = \'{x}\''],
   }
 
   if dry_run

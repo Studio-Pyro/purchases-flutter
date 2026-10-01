@@ -1,0 +1,27 @@
+name: purchases_flutter_store_galaxy
+description: "Samsung Galaxy Store add-on for purchases_flutter. Android only."
+version: 10.13.2
+homepage: https://www.revenuecat.com/
+issue_tracker: https://github.com/RevenueCat/purchases-flutter/issues
+documentation: https://docs.revenuecat.com/docs
+
+environment:
+  sdk: '>=3.4.0 <4.0.0'
+  flutter: '>=3.22.0'
+
+dependencies:
+  purchases_flutter: ^10.13.2
+  flutter:
+    sdk: flutter
+
+# Ignored by consumers of the published package. See purchases_ui_flutter/pubspec.yaml.
+dependency_overrides:
+  purchases_flutter:
+    path: ../
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.revenuecat.purchases_flutter_store_galaxy
+        pluginClass: PurchasesFlutterStoreGalaxyPlugin

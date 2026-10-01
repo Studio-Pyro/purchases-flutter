@@ -1,0 +1,44 @@
+group 'com.revenuecat.purchases_flutter_store_galaxy'
+version '10.13.2'
+
+buildscript {
+    ext.common_version = '19.3.1'
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.13.2'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdk 34
+
+    if (project.android.hasProperty("namespace")) {
+        namespace 'com.revenuecat.purchases_flutter_store_galaxy'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    defaultConfig {
+        minSdkVersion 23
+    }
+}
+
+dependencies {
+    implementation "com.revenuecat.purchases:purchases-hybrid-common-store-galaxy:$common_version"
+}
